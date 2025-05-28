@@ -83,6 +83,7 @@ module.exports = (env, argv) => {
           __dirname,
           '/home/abhisek-roy/Documents/OHIF-Viewer/Viewers/demo-mode/node_modules'
         ),
+        path.resolve(__dirname, '/home/abhisek-roy/Documents/OHIF-Viewer/Viewers/roy/node_modules'),
       ],
     },
     plugins: [
