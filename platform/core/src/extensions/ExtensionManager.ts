@@ -220,6 +220,7 @@ export default class ExtensionManager extends PubSubService {
     // but currently since some extensions need to be registered before
     // others, we need to run them sequentially. We need a postInit hook
     // to avoid this sequential async registration
+    console.log('extension length', extensions);
     for (let i = 0; i < extensions.length; i++) {
       const extension = extensions[i];
       const hasConfiguration = Array.isArray(extension);

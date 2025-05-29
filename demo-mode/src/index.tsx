@@ -22,6 +22,7 @@ const cornerstone = {
 const extensionDependencies = {
   '@ohif/extension-default': '^3.0.0',
   '@ohif/extension-cornerstone': '^3.0.0',
+  'my-extension': '^0.0.1',
 };
 
 function modeFactory({ modeConfiguration }) {
@@ -61,7 +62,6 @@ function modeFactory({ modeConfiguration }) {
         'Crosshairs',
         'MoreTools',
       ]);
-      
 
       toolbarService.updateSection('MeasurementTools', [
         'Length',
@@ -144,15 +144,15 @@ function modeFactory({ modeConfiguration }) {
           return {
             id: ohif.layout,
             props: {
-              leftPanels: [ohif.rightPanel],
-              rightPanels: [ohif.leftPanel],
+              leftPanels: ['my-extension.panelModule.Roy Panel', ohif.rightPanel],
+              rightPanels: [ohif.leftPanel, 'my-extension.panelModule.Roy Panel'],
               viewports: [
                 {
                   namespace: cornerstone.viewport,
                   displaySetsToDisplay: [ohif.sopClassHandler],
                   viewportOptions: {
-      background: [255 , 255, 0], // Black RGB
-    },
+                    background: [255, 255, 0],
+                  },
                 },
               ],
             },
