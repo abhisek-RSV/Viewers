@@ -1,5 +1,10 @@
+import CustomPanel from './components/CustomPanel';
 import RoyPanel from './components/RoyPanel';
+import AbhisekModal from './components/AbhisekModal';
+import AbhisekTool from './Tool/AbhisekTool';
+import { addTool } from '@cornerstonejs/tools';
 import { id } from './id';
+import customHangingProtocol from './Tool/customHangingProtocol';
 
 /**
  * You can remove any of the following modules if you don't need them.
@@ -17,8 +22,23 @@ export default {
    * (e.g. cornerstone, cornerstoneTools, ...) or registering any services that
    * this extension is providing.
    */
-  preRegistration: ({ servicesManager, commandsManager, configuration = {} }) => {
-    console.log('My extension is loaded!');
+  preRegistration: ({
+    servicesManager,
+    HangingProtocolService,
+    commandsManager,
+    configuration = {},
+  }) => {
+    console.log('My extension is loaded!', servicesManager);
+    addTool(AbhisekTool);
+    const hangingProtocolService = servicesManager.services.hangingProtocolService;
+    console.log('My service is loaded!', hangingProtocolService);
+
+    if (hangingProtocolService?.addProtocol) {
+      console.log('MaddProtocol', customHangingProtocol);
+      hangingProtocolService.addProtocol(customHangingProtocol.id, customHangingProtocol);
+    } else {
+      console.warn('hangingProtocolService is not available yet.');
+    }
   },
   /**
    * PanelModule should provide a list of panels that will be available in OHIF
@@ -36,6 +56,15 @@ export default {
         iconLabel: 'Roy',
         label: 'Roy Panel',
         tooltip: 'Custom Roy Panel',
+      },
+      {
+        id: 'custom-panel',
+        component: CustomPanel,
+        name: 'Custom Panel',
+        iconName: 'tab-linear',
+        iconLabel: 'Custom',
+        label: 'Custom Panel',
+        tooltip: 'Another custom panel',
       },
     ];
   },
@@ -56,8 +85,28 @@ export default {
    * splitButton toolButton that the default extension is providing.
    */
   getToolbarModule: ({ servicesManager, commandsManager, extensionManager }) => {
-    console.log('Exporting tool panel module');
+    return [
+      // {
+      //   id: 'roy-button',
+      //   type: 'command',
+      //   props: {
+      //     icon: 'circle',
+      //     label: 'Do Something',
+      //     commandName: 'myExtensionCommand',
+      //   },
+      // },
+      // {
+      //   id: 'abhisek-tool',
+      //   type: 'tool',
+      //   props: {
+      //     icon: 'circle',
+      //     label: 'Abhisek Tool',
+      //     toolName: AbhisekTool.toolName,
+      //   },
+      // },
+    ];
   },
+
   /**
    * LayoutTemplateMOdule should provide a list of layout templates that will be
    * available in OHIF for Modes to consume and use to layout the viewer.
@@ -87,6 +136,12 @@ export default {
    */
   getHangingProtocolModule: ({ servicesManager, commandsManager, extensionManager }) => {
     console.log('Exporting protocl panel module');
+    return [
+      {
+        id: customHangingProtocol.id,
+        protocols: [customHangingProtocol],
+      },
+    ];
   },
   /**
    * CommandsModule should provide a list of commands that will be available in OHIF
@@ -97,6 +152,15 @@ export default {
    */
   getCommandsModule: ({ servicesManager, commandsManager, extensionManager }) => {
     console.log('Exporting commands panel module');
+    return {
+      definitions: {
+        myExtensionCommand: {
+          commandFn: () => alert('Button clicked!'),
+          storeContexts: [],
+        },
+      },
+      defaultContext: 'ACTIVE_VIEWPORT::CORNERSTONE',
+    };
   },
   /**
    * ContextModule should provide a list of context that will be available in OHIF

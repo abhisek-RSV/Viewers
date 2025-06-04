@@ -95,6 +95,122 @@ function modeFactory({ modeConfiguration }) {
         'UltrasoundDirectionalTool',
         'WindowLevelRegion',
       ]);
+
+      const disabledButtonDefinitions = [
+        {
+          id: 'Zoom',
+          uiType: 'ohif.toolButton',
+          props: {
+            icon: 'tool-zoom',
+            label: 'Zoom',
+            tooltip: 'Zoom is disabled in this mode',
+
+            evaluate: () => ({
+              hideWhenDisabled: true,
+              disabled: true,
+            }),
+          },
+        },
+        {
+          id: 'Pan',
+          uiType: 'ohif.toolButton',
+          props: {
+            icon: 'tool-move',
+            label: 'Pan',
+            tooltip: 'Pan is disabled in this Roy',
+
+            evaluate: {
+              name: 'evaluate.cornerstoneTool',
+              options: {
+                disabled: true,
+                disabledText: 'Pan is disabled in this mode',
+                hideWhenDisabled: false,
+              },
+            },
+            id: '',
+          },
+        },
+      ];
+
+      // Register overrides
+      toolbarService.register(disabledButtonDefinitions, true);
+      toolbarService.register(
+        [
+          {
+            id: 'CircleROI',
+            uiType: 'ohif.toolButton',
+            props: {
+              icon: 'tool-circle',
+              label: 'Circle ROI',
+              tooltip: 'Circle ROI is disabled in this Roy Mode',
+              evaluate: () => ({
+                disabled: true,
+                hideWhenDisabled: false,
+                disabledText: 'circle-ROI is disabled in ROY mode',
+                className: 'disabled-tool-button',
+              }),
+              id: '',
+            },
+          },
+          {
+            id: 'PlanarFreehandROI',
+            uiType: 'ohif.toolButton',
+            props: {
+              icon: 'icon-tool-freehand-roi',
+              label: 'Freehand ROI',
+              tooltip: 'Freehand ROI is disabled in this Roy Mode',
+
+              evaluate: () => ({
+                disabled: true,
+                hideWhenDisabled: false,
+                disabledText: 'Freehand is disabled in ROY mode',
+                className: 'disabled-tool-button',
+              }),
+              id: '',
+            },
+          },
+        ],
+        true
+      ); // `true` is important — it overrides existing buttons
+
+      // toolbarService.register([
+      //   {
+      //     id: 'roy-button',
+      //     type: 'command',
+      //     props: {
+      //       icon: 'measure',
+      //       label: 'Do Something',
+      //       commands: 'myExtensionCommand',
+      //     },
+      //   },
+      // ]);
+      // Assuming you have access to the ToolbarService (as you do in your onModeEnter hook)
+      // const { toolbarService } = servicesManager.services;
+      // const disabledButtonDefinitions = [
+      //   {
+      //     id: 'Zoom',
+      //     uiType: 'ohif.toolButton',
+      //     props: {
+      //       icon: 'tool-zoom',
+      //       label: 'zoom',
+      //       tooltip: 'Rectangle ROI (Disabled)',
+      //       // className: 'disabled-tool-button',
+      //     },
+      //     evaluate: ({ viewportId, button, extra }) => ({
+      //       disabled: true,
+      //       hideWhenDisabled: false,
+      //       disabledText: 'Rectangle ROI is currently disabled',
+      //       className: 'opacity-50 cursor-not-allowed',
+      //     }),
+      //   },
+      // ];
+
+      // // Register the disabled button definitions
+      // toolbarService?.register(disabledButtonDefinitions);
+
+      // Alternative approach: Override existing buttons
+      // This ensures the disabled versions take precedence
+      // toolbarService.setButtons(disabledButtonDefinitions);
     },
     onModeExit: ({ servicesManager }: withAppTypes) => {
       const {
@@ -145,7 +261,7 @@ function modeFactory({ modeConfiguration }) {
             id: ohif.layout,
             props: {
               leftPanels: ['my-extension.panelModule.Roy Panel', ohif.rightPanel],
-              rightPanels: [ohif.leftPanel, 'my-extension.panelModule.Roy Panel'],
+              rightPanels: [ohif.leftPanel, 'my-extension.panelModule.Custom Panel'],
               viewports: [
                 {
                   namespace: cornerstone.viewport,
@@ -163,7 +279,7 @@ function modeFactory({ modeConfiguration }) {
     /** List of extensions that are used by the mode */
     extensions: extensionDependencies,
     /** HangingProtocol used by the mode */
-    // hangingProtocol: [''],
+    // hangingProtocol: ['customHangingProtocol'],
     /** SopClassHandlers used by the mode */
     sopClassHandlers: [ohif.sopClassHandler],
     /** hotkeys for mode */
